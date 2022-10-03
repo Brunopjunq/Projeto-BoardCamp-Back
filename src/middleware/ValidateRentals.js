@@ -1,7 +1,7 @@
 import connection from "../database/db.js";
 import rentalsSchema from '../schemas/rentalsSchema.js';
 
-export default async function validateRentals(req,res,next) {
+export default async function ValidateRentals(req,res,next) {
     const validation = rentalsSchema.validate(req.body, {abortEarly: false});
 
     if(validation.error) {
