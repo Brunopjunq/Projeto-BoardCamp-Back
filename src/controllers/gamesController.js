@@ -1,12 +1,21 @@
 import connection from "../database/db.js";
 
 export async function getGames(req,res) {
+    const {name} = req.query;
+    let game;
+
     try {
 
-        //FALTA A PARTE DE QUERY
-        const games = await connection.query('SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId"=categories.id;');
+        if(name) {
+            game = await connection.query(`SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId"=categories.id WHERE LOWER(games.name) LIKE LOWER($1)`, [`${name}%`])
+        }
 
-        res.send(games.rows);
+        else {
+            game = await connection.query('SELECT games.*, categories.name AS "categoryName" FROM games JOIN categories ON games."categoryId"=categories.id');
+        }
+        
+
+        res.send(game.rows);
 
     } catch (error) {
         console.log(error);

@@ -12,9 +12,20 @@ export async function postCustomer(req,res) {
 }
 
 export async function getCustomers(req,res) {
+    const {cpf} = req.query;
+    let customer;
+
     try {
-        const customers = await connection.query('SELECT * FROM customers');
-        res.send(customers.rows);
+
+        if(cpf) {
+            customer = await connection.query(`SELECT * FROM customers WHERE cpf LIKE $1`, [`${cpf}%`]);
+        }
+
+        else {
+            customer = await connection.query('SELECT * FROM customers');
+        }
+
+        res.send(customer.rows);
 
     } catch (error) {
         console.log(error);
